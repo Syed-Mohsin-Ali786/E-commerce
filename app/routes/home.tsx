@@ -1,5 +1,6 @@
+import Main from "~/mainPage";
+
 import type { Route } from "./+types/home";
-import { Welcome } from "../welcome/welcome";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -9,5 +10,17 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export default function Home() {
-  return <Welcome />;
+  return (
+    <>
+    <Navbar/>
+      <div className="px-6 md:px-16 lg:px-32">
+        <HeaderSlider />
+        <HomeProducts />
+        <FeaturedProduct />
+        <Banner />
+        <NewsLetter />
+      </div>
+      <Footer />
+    </>
+  );
 }
