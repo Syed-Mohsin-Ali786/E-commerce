@@ -1,24 +1,35 @@
-"use client"
 import { useEffect, useState } from "react";
-import { assets } from "../assets/assets";
+import { assets } from "@/assets/assets";
 import ProductCard from "./components/ProductCard";
 import { useParams } from "react-router";
 import Loading from "./components/Loading";
 import { useAppContext } from "../context/AppContext";
-import React from "react";
+
+interface Product {
+    _id: string;
+    name: string;
+    description: string;
+    image: string[];
+    price: number;
+    offerPrice: number;
+    category: string;
+}
 
 const Product = () => {
 
     const { id } = useParams();
+    // const navigate = useNavigate();
 
-    const { products, navigate, addToCart } = useAppContext()
+    const { products, addToCart } = useAppContext()
 
-    const [mainImage, setMainImage] = useState(null);
-    const [productData, setProductData] = useState(null);
+    const [mainImage, setMainImage] = useState<string | null>(null);
+    const [productData, setProductData] = useState<Product | null>(null);
 
     const fetchProductData = async () => {
-        const product = products.find(product => product._id === id);
-        setProductData(product);
+        const product = products.find(product => product._id === id) as Product | undefined;
+        if (product) {
+            setProductData(product);
+        }
     }
 
     useEffect(() => {
@@ -108,7 +119,9 @@ const Product = () => {
                         <button onClick={() => addToCart(productData._id)} className="w-full py-3.5 bg-gray-100 text-gray-800/80 hover:bg-gray-200 transition">
                             Add to Cart
                         </button>
-                        <button onClick={() => { addToCart(productData._id); navigate('/cart') }} className="w-full py-3.5 bg-orange-500 text-white hover:bg-orange-600 transition">
+                        <button
+                        //  onClick={() => { addToCart(productData._id); navigate('/cart') }} 
+                        className="w-full py-3.5 bg-orange-500 text-white hover:bg-orange-600 transition">
                             Buy now
                         </button>
                     </div>

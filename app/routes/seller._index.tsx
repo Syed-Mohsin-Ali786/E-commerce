@@ -1,16 +1,16 @@
-import React, { useState } from "react";
-import { assets } from "../assets/assets";
+import { useState } from "react";
+import { assets } from "@/assets/assets";
 
 const AddProduct = () => {
 
-  const [files, setFiles] = useState([]);
+  const [files, setFiles] = useState<(File | null)[]>([]);
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState('Earphone');
   const [price, setPrice] = useState('');
   const [offerPrice, setOfferPrice] = useState('');
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
   };
@@ -25,14 +25,16 @@ const AddProduct = () => {
             {[...Array(4)].map((_, index) => (
               <label key={index} htmlFor={`image${index}`}>
                 <input onChange={(e) => {
-                  const updatedFiles = [...files];
-                  updatedFiles[index] = e.target.files[0];
-                  setFiles(updatedFiles);
+                  if (e.target.files) {
+                    const updatedFiles = [...files];
+                    updatedFiles[index] = e.target.files[0];
+                    setFiles(updatedFiles);
+                  }
                 }} type="file" id={`image${index}`} hidden />
                 <img
                   key={index}
                   className="max-w-24 cursor-pointer"
-                  src={files[index] ? URL.createObjectURL(files[index]) : assets.upload_area}
+                  src={files[index] ? URL.createObjectURL(files[index] as Blob) : assets.upload_area}
                   alt=""
                   width={100}
                   height={100}

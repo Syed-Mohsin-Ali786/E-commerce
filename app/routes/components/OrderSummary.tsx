@@ -1,20 +1,21 @@
-import { addressDummyData } from "@/assets/assets";
+import { addressDummyData } from "@/assets/dummyData";
 import { useAppContext } from "@/context/AppContext";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 const OrderSummary = () => {
 
-  const { currency, router, getCartCount, getCartAmount } = useAppContext()
-  const [selectedAddress, setSelectedAddress] = useState(null);
+  const { currency, getCartCount, getCartAmount } = useAppContext()
+  // const navigate = useNavigate();
+  const [selectedAddress, setSelectedAddress] = useState<any>(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-  const [userAddresses, setUserAddresses] = useState([]);
+  const [userAddresses, setUserAddresses] = useState<any[]>([]);
 
   const fetchUserAddresses = async () => {
     setUserAddresses(addressDummyData);
   }
 
-  const handleAddressSelect = (address) => {
+  const handleAddressSelect = (address: any) => {
     setSelectedAddress(address);
     setIsDropdownOpen(false);
   };
@@ -67,7 +68,7 @@ const OrderSummary = () => {
                   </li>
                 ))}
                 <li
-                  onClick={() => router.push("/add-address")}
+                  // onClick={() => navigate("/add-address")}
                   className="px-4 py-2 hover:bg-gray-500/10 cursor-pointer text-center"
                 >
                   + Add New Address
@@ -85,7 +86,7 @@ const OrderSummary = () => {
             <input
               type="text"
               placeholder="Enter promo code"
-              className="flex-grow w-full outline-none p-2.5 text-gray-600 border"
+              className="grow w-full outline-none p-2.5 text-gray-600 border"
             />
             <button className="bg-orange-600 text-white px-9 py-2 hover:bg-orange-700">
               Apply

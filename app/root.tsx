@@ -5,13 +5,17 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
-} from "react-router";
-import { AppContextProvider } from "./context/AppContext.tsx";
-import Navbar from "./routes/components/Navbar.js";
-import Footer from "./routes/components/Footer.js";
-
+} from "react-router"; // Updated import
+import { AppContextProvider } from "./context/AppContext";
+import Navbar from "./routes/components/Navbar";
+import Footer from "./routes/components/Footer";
+import { clerkMiddleware, rootAuthLoader } from "@clerk/react-router/server";
 import type { Route } from "./+types/root";
 import "./app.css";
+import { ClerkProvider } from "@clerk/react-router";
+
+export const middleware: Route.MiddlewareFunction[] = [clerkMiddleware()];
+export const loader = (args: Route.LoaderArgs) => rootAuthLoader(args);
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -26,9 +30,10 @@ export const links: Route.LinksFunction = () => [
   },
 ];
 
-export function Layout({ children }: { children: React.ReactNode }) {
+export default function App({ loaderData }: Route.ComponentProps) {
   return (
-    <html lang="en">
+    // Added suppressHydrationWarning to handle browser extensions/autofill
+    <html lang="en" suppressHydrationWarning>
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -36,20 +41,18 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
-        <AppContextProvider>
-          <Navbar />
-          {children}
-          <Footer />
-        </AppContextProvider>
+        <ClerkProvider loaderData={loaderData}>
+          <AppContextProvider>
+            <Navbar />
+            <Outlet />
+            <Footer />
+          </AppContextProvider>
+        </ClerkProvider>
         <ScrollRestoration />
         <Scripts />
       </body>
     </html>
   );
-}
-
-export default function App() {
-  return <Outlet />;
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
