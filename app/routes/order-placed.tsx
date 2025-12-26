@@ -1,14 +1,13 @@
-import { assets } from '../assets/assets'
-import { useAppContext } from '../context/AppContext'
+import { assets } from "@/assets/assets";
 import { useEffect } from 'react'
 
 const OrderPlaced = () => {
 
-  const { navigate } = useAppContext()
+  // const navigate = useNavigate()
 
   useEffect(() => {
     setTimeout(() => {
-      navigate('/my-orders')
+      // navigate('/my-orders')
     }, 5000)
   }, [])
 

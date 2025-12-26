@@ -1,0 +1,8 @@
+feat: Resolve HydratedRouter error and clean up unused imports
+
+This commit addresses the following:
+- Wrapped the main application component (`App`) within `HydratedRouter` in `entry.client.tsx` and `ServerRouter` in `entry.server.tsx` to resolve the "You must render this element inside a <HydratedRouter> element" error.
+- Removed all identified unused `React`, `useNavigate`, and `HydratedRouter` imports across various components and routes to improve code quality and eliminate build warnings.
+- Migrated several `.jsx` files to `.tsx` as part of the ongoing TypeScript migration.
+
+The build now completes without any "unused import" warnings. A sourcemap error for `app/routes/product.$id.tsx` persists but does not prevent successful compilation.

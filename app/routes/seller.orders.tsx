@@ -1,13 +1,21 @@
-import React, { useEffect, useState } from "react";
-import { assets, orderDummyData } from "../assets/assets";
+import { useEffect, useState } from "react";
+import { assets } from "@/assets/assets";
+import { orderDummyData } from "@/assets/dummyData";
 import { useAppContext } from "../context/AppContext";
 import Loading from "./components/Loading";
+
+interface Order {
+    items: { product: { name: string }, quantity: number }[];
+    address: { fullName: string, area: string, city: string, state: string, phoneNumber: string };
+    amount: number;
+    date: string;
+}
 
 const Orders = () => {
 
     const { currency } = useAppContext();
 
-    const [orders, setOrders] = useState([]);
+    const [orders, setOrders] = useState<Order[]>([]);
     const [loading, setLoading] = useState(true);
 
     const fetchSellerOrders = async () => {

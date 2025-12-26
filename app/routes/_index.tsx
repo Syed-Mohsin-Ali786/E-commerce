@@ -1,4 +1,3 @@
-import React from "react";
 import HeaderSlider from "./components/HeaderSlider";
 import HomeProducts from "./components/HomeProducts";
 import Banner from "./components/Banner";

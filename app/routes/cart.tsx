@@ -1,12 +1,12 @@
-import React from "react";
-import { assets } from "../assets/assets";
+import { assets } from "@/assets/assets";
 import OrderSummary from "./components/OrderSummary";
 import { useAppContext } from "../context/AppContext";
 import { Link } from "react-router-dom";
 
 const Cart = () => {
 
-  const { products, navigate, cartItems, addToCart, updateCartQuantity, getCartCount } = useAppContext();
+  const { products, cartItems, addToCart, updateCartQuantity, getCartCount } = useAppContext();
+  // const navigate = useNavigate();
 
   return (
     <div className="flex flex-col md:flex-row gap-10 px-6 md:px-16 lg:px-32 pt-14 mb-20">

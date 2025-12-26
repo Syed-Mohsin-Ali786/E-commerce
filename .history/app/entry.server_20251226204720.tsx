@@ -1,0 +1,2 @@
+Argument of type '<Writable extends NodeJS.WritableStream>(destination: Writable) => Writable' is not assignable to parameter of type 'BodyInit | null | undefined'.ts(2345)
+const pipe: <Writable extends NodeJS.WritableStream>(destination: Writable) => Writable
