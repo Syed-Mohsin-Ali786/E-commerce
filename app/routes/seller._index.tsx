@@ -1,7 +1,5 @@
-'use client'
 import React, { useState } from "react";
-import { assets } from "@/assets/assets";
-import Image from "next/image";
+import { assets } from "../assets/assets";
 
 const AddProduct = () => {
 
@@ -31,7 +29,7 @@ const AddProduct = () => {
                   updatedFiles[index] = e.target.files[0];
                   setFiles(updatedFiles);
                 }} type="file" id={`image${index}`} hidden />
-                <Image
+                <img
                   key={index}
                   className="max-w-24 cursor-pointer"
                   src={files[index] ? URL.createObjectURL(files[index]) : assets.upload_area}
@@ -128,7 +126,6 @@ const AddProduct = () => {
           ADD
         </button>
       </form>
-      {/* <Footer /> */}
     </div>
   );
 };

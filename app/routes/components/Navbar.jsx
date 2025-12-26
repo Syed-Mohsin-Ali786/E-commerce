@@ -5,7 +5,7 @@ import Link from "next/link"
 import { useAppContext } from "@/context/AppContext";
 import Image from "next/image";
 
-const Navbar = () => {
+export default function Navbar() {
 
   const { isSeller, router } = useAppContext();
 
@@ -54,4 +54,3 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;

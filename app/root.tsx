@@ -6,6 +6,9 @@ import {
   Scripts,
   ScrollRestoration,
 } from "react-router";
+import { AppContextProvider } from "./context/AppContext.tsx";
+import Navbar from "./routes/components/Navbar.js";
+import Footer from "./routes/components/Footer.js";
 
 import type { Route } from "./+types/root";
 import "./app.css";
@@ -33,7 +36,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
-        {children}
+        <AppContextProvider>
+          <Navbar />
+          {children}
+          <Footer />
+        </AppContextProvider>
         <ScrollRestoration />
         <Scripts />
       </body>

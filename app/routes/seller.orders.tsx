@@ -1,10 +1,7 @@
-'use client';
 import React, { useEffect, useState } from "react";
-import { assets, orderDummyData } from "@/assets/assets";
-import Image from "next/image";
-import { useAppContext } from "@/context/AppContext";
-import Footer from "@/components/seller/Footer";
-import Loading from "@/components/Loading";
+import { assets, orderDummyData } from "../assets/assets";
+import { useAppContext } from "../context/AppContext";
+import Loading from "./components/Loading";
 
 const Orders = () => {
 
@@ -30,7 +27,7 @@ const Orders = () => {
                     {orders.map((order, index) => (
                         <div key={index} className="flex flex-col md:flex-row gap-5 justify-between p-5 border-t border-gray-300">
                             <div className="flex-1 flex gap-5 max-w-80">
-                                <Image
+                                <img
                                     className="max-w-16 max-h-16 object-cover"
                                     src={assets.box_icon}
                                     alt="box_icon"
@@ -65,7 +62,6 @@ const Orders = () => {
                     ))}
                 </div>
             </div>}
-            <Footer />
         </div>
     );
 };
