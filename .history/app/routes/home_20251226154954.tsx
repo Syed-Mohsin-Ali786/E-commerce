@@ -1,11 +1,11 @@
 import type { Route } from "./+types/home";
-import Banner from "./components/Banner.js";
-import FeaturedProduct from "./components/FeaturedProduct.js";
-import Footer from "./components/Footer.js";
-import HeaderSlider from "./components/HeaderSlider.js";
-import HomeProducts from "./components/HomeProducts.js";
-import Navbar from "./components";
-import NewsLetter from "./components/NewsLetter.js";
+import Banner from "./components/Banner.jsx";
+import FeaturedProduct from "./components/FeaturedProduct.jsx";
+import Footer from "./components/Footer.jsx";
+import HeaderSlider from "./components/HeaderSlider.jsx";
+import HomeProducts from "./components/HomeProducts.jsx";
+import Navbar from "./components/";
+import NewsLetter from "./components/NewsLetter.jsx";
 
 export function meta({}: Route.MetaArgs) {
   return [

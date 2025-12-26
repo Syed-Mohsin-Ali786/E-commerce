@@ -7,8 +7,8 @@ import {
   ScrollRestoration,
 } from "react-router";
 import { AppContextProvider } from "./context/AppContext.tsx";
-import Navbar from "./routes/components/Navbar.js";
-import Footer from "./routes/components/Footer.js";
+import Navbar from "./routes/components/Navbar.jsx";
+import Footer from "./routes/components/Footer.jsx";
 
 import type { Route } from "./+types/root";
 import "./app.css";
