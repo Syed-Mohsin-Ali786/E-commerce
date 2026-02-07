@@ -50,7 +50,10 @@ export default function Navbar() {
             Seller Dashboard
           </Link>
         ) : (
-          <Link to="SignUp" className="text-xs border px-4 py-1.5 rounded-full">
+          <Link
+            to="SellerSignup"
+            className="text-xs border px-4 py-1.5 rounded-full"
+          >
             Become a Seller
           </Link>
         )}

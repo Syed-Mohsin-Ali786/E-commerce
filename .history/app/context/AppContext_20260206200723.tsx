@@ -1,4 +1,6 @@
 import { productsDummyData, userDummyData } from "@/assets/dummyData";
+import { useUser } from "@clerk/react-router";
+import type { UserResource } from "@clerk/types";
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import { useNavigate } from "react-router"; // Replaced next/navigation
 
@@ -36,6 +38,7 @@ interface AppContextType {
   updateCartQuantity: (itemId: string, quantity: number) => Promise<void>;
   getCartCount: () => number;
   getCartAmount: () => number;
+  user: UserResource | null | undefined;
 }
 
 // --- Context Logic ---
@@ -57,9 +60,10 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
 
   const [products, setProducts] = useState<Product[]>([]);
   const [userData, setUserData] = useState<UserData | boolean>(false);
-  const [isSeller, setIsSeller] = useState<boolean>(true);
+  const [isSeller, setIsSeller] = useState<boolean>(false);
   const [cartItems, setCartItems] = useState<CartItems>({});
 
+  const {user}=useUser()
   const fetchProductData = async () => {
     setProducts(productsDummyData);
   };
@@ -115,6 +119,7 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const value: AppContextType = {
+    user,
     currency,
     navigate,
     isSeller,

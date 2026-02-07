@@ -8,7 +8,7 @@ import {
   useClerk,
   UserButton,
 } from "@clerk/react-router";
-import { BagIcon, BoxIcon, CartIcon, HomeIcon } from "./Icons";
+import { BagIcon, CartIcon } from "./Icons";
 
 export default function Navbar() {
   const { openSignIn } = useClerk();
@@ -42,16 +42,12 @@ export default function Navbar() {
           Contact
         </Link>
 
-        {isSeller ? (
+        {isSeller && (
           <Link
             to="/seller"
             className="text-xs border px-4 py-1.5 rounded-full"
           >
             Seller Dashboard
-          </Link>
-        ) : (
-          <Link to="SignUp" className="text-xs border px-4 py-1.5 rounded-full">
-            Become a Seller
           </Link>
         )}
       </div>
@@ -62,24 +58,17 @@ export default function Navbar() {
           <>
             <UserButton>
               <UserButton.MenuItems>
-                <UserButton.Action
-                  label="Cart"
-                  labelIcon={<CartIcon />}
-                  onClick={() => {
-                    // navigate to cart page
-                    window.location.href = "/cart";
-                  }}
-                />
-                <UserButton.Action
-                  label="My Orders"
-                  labelIcon={<BagIcon />}
-                  onClick={() => {
-                    // navigate to cart page
-                    window.location.href = "/my-orders";
-                  }}
-                />
+               <UserButton.Action label="Cart" labelIcon={<CartIcon/>} onClick={() => {
+                // navigate to cart page
+                window.location.href = '/cart';
+               }} />
+               <UserButton.Action label="My Orders" labelIcon={<BagIcon/>} onClick={() => {
+                // navigate to cart page
+                window.location.href = '/my-orders';
+               }} />
               </UserButton.MenuItems>
-            </UserButton>
+              
+              </UserButton>
           </>
         ) : (
           <button
@@ -105,40 +94,17 @@ export default function Navbar() {
           <>
             <UserButton>
               <UserButton.MenuItems>
-                <UserButton.Action
-                  label="Home"
-                  labelIcon={<HomeIcon />}
-                  onClick={() => {
-                    // navigate to cart page
-                    window.location.href = "/";
-                  }}
-                />
-                <UserButton.Action
-                  label="Products"
-                  labelIcon={<BoxIcon />}
-                  onClick={() => {
-                    // navigate to cart page
-                    window.location.href = "/Products";
-                  }}
-                />
-                <UserButton.Action
-                  label="Cart"
-                  labelIcon={<CartIcon />}
-                  onClick={() => {
-                    // navigate to cart page
-                    window.location.href = "/cart";
-                  }}
-                />
-                <UserButton.Action
-                  label="My Orders"
-                  labelIcon={<BagIcon />}
-                  onClick={() => {
-                    // navigate to cart page
-                    window.location.href = "/my-orders";
-                  }}
-                />
+               <UserButton.Action label="Cart" labelIcon={<CartIcon/>} onClick={() => {
+                // navigate to cart page
+                window.location.href = '/cart';
+               }} />
+               <UserButton.Action label="My Orders" labelIcon={<BagIcon/>} onClick={() => {
+                // navigate to cart page
+                window.location.href = '/my-orders';
+               }} />
               </UserButton.MenuItems>
-            </UserButton>
+              
+              </UserButton>
           </>
         ) : (
           <button

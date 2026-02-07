@@ -42,16 +42,12 @@ export default function Navbar() {
           Contact
         </Link>
 
-        {isSeller ? (
+        {isSeller && (
           <Link
             to="/seller"
             className="text-xs border px-4 py-1.5 rounded-full"
           >
             Seller Dashboard
-          </Link>
-        ) : (
-          <Link to="SignUp" className="text-xs border px-4 py-1.5 rounded-full">
-            Become a Seller
           </Link>
         )}
       </div>
