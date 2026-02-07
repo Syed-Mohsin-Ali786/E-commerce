@@ -8,6 +8,7 @@ import {
   useClerk,
   UserButton,
 } from "@clerk/react-router";
+import { BagIcon, BoxIcon, CartIcon, HomeIcon } from "./Icons";
 
 export default function Navbar() {
   const { openSignIn } = useClerk();
@@ -41,12 +42,16 @@ export default function Navbar() {
           Contact
         </Link>
 
-        {isSeller && (
+        {isSeller ? (
           <Link
             to="/seller"
             className="text-xs border px-4 py-1.5 rounded-full"
           >
             Seller Dashboard
+          </Link>
+        ) : (
+          <Link to="SignUp" className="text-xs border px-4 py-1.5 rounded-full">
+            Become a Seller
           </Link>
         )}
       </div>
@@ -55,7 +60,26 @@ export default function Navbar() {
         <img className="w-4 h-4" src={assets.search_icon} alt="search icon" />
         {user ? (
           <>
-            <UserButton />
+            <UserButton>
+              <UserButton.MenuItems>
+                <UserButton.Action
+                  label="Cart"
+                  labelIcon={<CartIcon />}
+                  onClick={() => {
+                    // navigate to cart page
+                    window.location.href = "/cart";
+                  }}
+                />
+                <UserButton.Action
+                  label="My Orders"
+                  labelIcon={<BagIcon />}
+                  onClick={() => {
+                    // navigate to cart page
+                    window.location.href = "/my-orders";
+                  }}
+                />
+              </UserButton.MenuItems>
+            </UserButton>
           </>
         ) : (
           <button
@@ -77,10 +101,54 @@ export default function Navbar() {
             Seller Dashboard
           </button>
         )}
-        <button className="flex items-center gap-2 hover:text-gray-900 transition ">
-          <img src={assets.user_icon} alt="user icon" />
-          Account
-        </button>
+        {user ? (
+          <>
+            <UserButton>
+              <UserButton.MenuItems>
+                <UserButton.Action
+                  label="Home"
+                  labelIcon={<HomeIcon />}
+                  onClick={() => {
+                    // navigate to cart page
+                    window.location.href = "/";
+                  }}
+                />
+                <UserButton.Action
+                  label="Products"
+                  labelIcon={<BoxIcon />}
+                  onClick={() => {
+                    // navigate to cart page
+                    window.location.href = "/Products";
+                  }}
+                />
+                <UserButton.Action
+                  label="Cart"
+                  labelIcon={<CartIcon />}
+                  onClick={() => {
+                    // navigate to cart page
+                    window.location.href = "/cart";
+                  }}
+                />
+                <UserButton.Action
+                  label="My Orders"
+                  labelIcon={<BagIcon />}
+                  onClick={() => {
+                    // navigate to cart page
+                    window.location.href = "/my-orders";
+                  }}
+                />
+              </UserButton.MenuItems>
+            </UserButton>
+          </>
+        ) : (
+          <button
+            className="flex items-center gap-2 hover:text-gray-900 transition hover:cursor-pointer"
+            onClick={handleLogin}
+          >
+            <img src={assets.user_icon} alt="user icon" />
+            Account
+          </button>
+        )}
       </div>
     </nav>
   );

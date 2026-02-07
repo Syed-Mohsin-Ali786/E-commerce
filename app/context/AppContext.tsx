@@ -60,7 +60,7 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
 
   const [products, setProducts] = useState<Product[]>([]);
   const [userData, setUserData] = useState<UserData | boolean>(false);
-  const [isSeller, setIsSeller] = useState<boolean>(true);
+  const [isSeller, setIsSeller] = useState<boolean>(false);
   const [cartItems, setCartItems] = useState<CartItems>({});
 
   const {user}=useUser()
