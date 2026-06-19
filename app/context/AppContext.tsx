@@ -1,37 +1,16 @@
-import { productsDummyData, userDummyData } from "@/assets/dummyData";
+import type { ClientProduct } from "../.server/product-mapper";
+import type { CartItems } from "../.server/user.server";
+import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from "react";
+import { useFetcher, useNavigate } from "react-router";
 import { useUser } from "@clerk/react-router";
 import type { UserResource } from "@clerk/types";
-import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
-import { useNavigate } from "react-router"; // Replaced next/navigation
-
-// --- TypeScript Interfaces ---
-interface Product {
-  _id: string;
-  offerPrice: number;
-  name: string;
-  image:string[];
-  // Add other properties based on your dummy data
-}
-
-interface UserData {
-  name: string;
-  email: string;
-  // Add other properties
-}
-
-interface CartItems {
-  [itemId: string]: number;
-}
 
 interface AppContextType {
   currency: string | undefined;
   navigate: ReturnType<typeof useNavigate>;
   isSeller: boolean;
-  setIsSeller: (value: boolean) => void;
-  userData: UserData | boolean;
-  fetchUserData: () => Promise<void>;
-  products: Product[];
-  fetchProductData: () => Promise<void>;
+  products: ClientProduct[];
+  productsLoadError: string | null;
   cartItems: CartItems;
   setCartItems: (items: CartItems) => void;
   addToCart: (itemId: string) => Promise<void>;
@@ -40,8 +19,6 @@ interface AppContextType {
   getCartAmount: () => number;
   user: UserResource | null | undefined;
 }
-
-// --- Context Logic ---
 
 export const AppContext = createContext<AppContextType | undefined>(undefined);
 
@@ -53,37 +30,56 @@ export const useAppContext = () => {
   return context;
 };
 
-export const AppContextProvider = ({ children }: { children: ReactNode }) => {
-  // In React Router, we use import.meta.env for environment variables (Vite)
-  const currency = import.meta.env.VITE_PUBLIC_CURRENCY; 
+type AppContextProviderProps = {
+  children: ReactNode;
+  initialProducts: ClientProduct[];
+  initialCartItems: CartItems;
+  initialIsSeller: boolean;
+  productsLoadError?: string | null;
+};
+
+export const AppContextProvider = ({
+  children,
+  initialProducts,
+  initialCartItems,
+  initialIsSeller,
+  productsLoadError = null,
+}: AppContextProviderProps) => {
+  const currency = import.meta.env.VITE_PUBLIC_CURRENCY;
   const navigate = useNavigate();
+  const fetcher = useFetcher();
+  const syncTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const [products, setProducts] = useState<Product[]>([]);
-  const [userData, setUserData] = useState<UserData | boolean>(false);
-  const [isSeller, setIsSeller] = useState<boolean>(false);
-  const [cartItems, setCartItems] = useState<CartItems>({});
+  const [products] = useState<ClientProduct[]>(initialProducts);
+  const [isSeller] = useState<boolean>(initialIsSeller);
+  const [cartItems, setCartItemsState] = useState<CartItems>(initialCartItems);
 
-  const {user}=useUser()
-  const fetchProductData = async () => {
-    setProducts(productsDummyData);
+  const { user } = useUser();
+
+  const persistCart = (items: CartItems) => {
+    if (!user) return;
+    if (syncTimerRef.current) clearTimeout(syncTimerRef.current);
+    syncTimerRef.current = setTimeout(() => {
+      fetcher.submit(
+        { intent: "sync-cart", cartItems: JSON.stringify(items) },
+        { method: "post", action: "/cart" },
+      );
+    }, 400);
   };
 
-  const fetchUserData = async () => {
-    setUserData(userDummyData);
+  const setCartItems = (items: CartItems) => {
+    setCartItemsState(items);
+    persistCart(items);
   };
 
   const addToCart = async (itemId: string) => {
-    let cartData = structuredClone(cartItems);
-    if (cartData[itemId]) {
-      cartData[itemId] += 1;
-    } else {
-      cartData[itemId] = 1;
-    }
+    const cartData = structuredClone(cartItems);
+    cartData[itemId] = (cartData[itemId] ?? 0) + 1;
     setCartItems(cartData);
   };
 
   const updateCartQuantity = async (itemId: string, quantity: number) => {
-    let cartData = structuredClone(cartItems);
+    const cartData = structuredClone(cartItems);
     if (quantity === 0) {
       delete cartData[itemId];
     } else {
@@ -114,20 +110,16 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
   };
 
   useEffect(() => {
-    fetchProductData();
-    fetchUserData();
-  }, []);
+    setCartItemsState(initialCartItems);
+  }, [initialCartItems]);
 
   const value: AppContextType = {
     user,
     currency,
     navigate,
     isSeller,
-    setIsSeller,
-    userData,
-    fetchUserData,
     products,
-    fetchProductData,
+    productsLoadError,
     cartItems,
     setCartItems,
     addToCart,
@@ -137,8 +129,6 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <AppContext.Provider value={value}>
-      {children}
-    </AppContext.Provider>
+    <AppContext.Provider value={value}>{children}</AppContext.Provider>
   );
 };

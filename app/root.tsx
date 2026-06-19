@@ -5,7 +5,7 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
-} from "react-router"; // Updated import
+} from "react-router";
 import { AppContextProvider } from "./context/AppContext";
 import Navbar from "./routes/components/Navbar";
 import Footer from "./routes/components/Footer";
@@ -13,9 +13,45 @@ import { clerkMiddleware, rootAuthLoader } from "@clerk/react-router/server";
 import type { Route } from "./+types/root";
 import "./app.css";
 import { ClerkProvider } from "@clerk/react-router";
+import { getOptionalUser } from "./.server/auth.server";
+import { getAllProducts } from "./.server/product.server";
+import { toClientProducts } from "./.server/product-mapper";
+import { getCartItems } from "./.server/user.server";
 
 export const middleware: Route.MiddlewareFunction[] = [clerkMiddleware()];
-export const loader = (args: Route.LoaderArgs) => rootAuthLoader(args);
+
+export const loader = (args: Route.LoaderArgs) =>
+  rootAuthLoader(args, async () => {
+    let initialProducts: Awaited<ReturnType<typeof toClientProducts>> = [];
+    let initialCartItems: Awaited<ReturnType<typeof getCartItems>> = {};
+    let initialIsSeller = false;
+    let productsLoadError: string | null = null;
+
+    try {
+      const products = await getAllProducts();
+      initialProducts = toClientProducts(products);
+    } catch {
+      productsLoadError =
+        "We couldn't load products right now. Please try again shortly.";
+    }
+
+    try {
+      const user = await getOptionalUser(args);
+      if (user) {
+        initialCartItems = await getCartItems(user.id);
+        initialIsSeller = user.role === "SELLER";
+      }
+    } catch {
+      // Cart/user sync is non-fatal; shop can still render.
+    }
+
+    return {
+      initialProducts,
+      initialCartItems,
+      initialIsSeller,
+      productsLoadError,
+    };
+  });
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -31,8 +67,15 @@ export const links: Route.LinksFunction = () => [
 ];
 
 export default function App({ loaderData }: Route.ComponentProps) {
+  const {
+    initialProducts,
+    initialCartItems,
+    initialIsSeller,
+    productsLoadError,
+    ...clerkData
+  } = loaderData;
+
   return (
-    // Added suppressHydrationWarning to handle browser extensions/autofill
     <html lang="en" suppressHydrationWarning>
       <head>
         <meta charSet="utf-8" />
@@ -41,8 +84,13 @@ export default function App({ loaderData }: Route.ComponentProps) {
         <Links />
       </head>
       <body>
-        <ClerkProvider loaderData={loaderData}>
-          <AppContextProvider>
+        <ClerkProvider loaderData={clerkData}>
+          <AppContextProvider
+            initialProducts={initialProducts}
+            initialCartItems={initialCartItems}
+            initialIsSeller={initialIsSeller}
+            productsLoadError={productsLoadError}
+          >
             <Navbar />
             <Outlet />
             <Footer />
